@@ -1,7 +1,5 @@
 ﻿using AutoOperator;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Linq.Expressions;
 
 namespace AutoOperatorTests
 {
@@ -16,27 +14,31 @@ namespace AutoOperatorTests
 					.ConfigureEquality<Car, Boat>(
 						eq => eq
 							.Operation(c1 => c1.Color, c2 => c2.Color)
-							.Operation(c1 => c1.Price, c2 => c2.Price)));
+							.Operation(c1 => c1.Price, c2 => c2.Price)
+							.Operation(c1 => c1.CarEngine, c2 => c2.BoatEngine))
+					.ConfigureEquality<CarEngine, BoatEngine>(
+						eq => eq
+							.Operation(e1 => e1.Hp, e2 => e2.Hp)
+						));
 
-			Assert.IsFalse(Operators.Equals(new Car() { Color = "", Price = 10 }, new Boat() { Color = "", Price = 11 }));
+			Assert.IsFalse(Operators.Equals(new Car() { Color = "", Price = 10, CarEngine = new CarEngine() { Hp = 300 } }, new Boat() { Color = "", Price = 10, BoatEngine = new BoatEngine() { Hp = 200 } }));
 		}
 
 		[TestMethod]
 		public void TestMethod2()
 		{
-			var builder = new EqualsOperatorExpression<Car, Boat>();
+			Operators.Initialize(
+				conf => conf
+					.ConfigureEquality<Car, Boat>(
+						eq => eq
+							.Operation(c1 => c1.Color, c2 => c2.Color)
+							.Operation(c1 => c1.Price, c2 => c2.Price))
+					.ConfigureEquality<CarEngine, BoatEngine>(
+						eq => eq
+							.Operation(e1 => e1.Hp, e2 => e2.Hp)
+						));
 
-			var theCarMatchesTheBoat = builder
-				.Operation(c1 => c1.Color, c2 => c2.Color)
-				.Operation(c1 => c1.Price, c2 => c2.Price)
-				.Build().Compile();
-
-			Assert.IsTrue(theCarMatchesTheBoat(new Car() { Color = "", Price = 10 }, new Boat() { Color = "", Price = 10 }));
-		}
-
-		private Expression<Func<T1, T2, bool>> BuildExpression<T1, T2, TReturn>(Expression<Func<T1, TReturn>> a, Expression<Func<T2, TReturn>> b)
-		{
-			return a.Eq(b);
+			Assert.IsTrue(Operators.Equals(new Car() { Color = "", Price = 10, CarEngine = new CarEngine() { Hp = 200 } }, new Boat() { Color = "", Price = 10, BoatEngine = new BoatEngine() { Hp = 200 } }));
 		}
 	}
 
@@ -44,11 +46,25 @@ namespace AutoOperatorTests
 	{
 		public string Color { get; internal set; }
 		public double Price { get; internal set; }
+
+		public CarEngine CarEngine { get; internal set; }
+	}
+
+	internal class CarEngine
+	{
+		public int Hp { get; internal set; }
 	}
 
 	internal class Boat
 	{
 		public string Color { get; internal set; }
 		public double Price { get; internal set; }
+
+		public BoatEngine BoatEngine { get; internal set; }
+	}
+
+	internal class BoatEngine
+	{
+		public int Hp { get; internal set; }
 	}
 }

@@ -1,12 +1,15 @@
 ﻿using System;
-using System.Linq.Expressions;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace AutoOperator
 {
-	public interface IBooleanOperatorExpression<T1, T2>
+	/// <summary>
+	/// interface for OperatorExpression.
+	/// </summary>
+	public interface IOperatorExpression
 	{
-		IBooleanOperatorExpression<T1, T2> Operation<TReturn>(Expression<Func<T1, TReturn>> a, Expression<Func<T2, TReturn>> b);
-
-		Expression<Func<T1, T2, bool>> Build();
 	}
 }
