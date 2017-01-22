@@ -94,6 +94,14 @@ namespace AutoOperator
 			return first.ComposeAndMerge(second, Expression.And);
 		}
 
+		public static Expression<Func<T1, T2, bool>> Not<T1, T2>(this Expression<Func<T1, T2, bool>> exp)
+		{
+			var parameters = exp.Parameters;
+			var body = Expression.Not(exp.Body);
+
+			return Expression.Lambda<Func<T1, T2, bool>>(body, parameters);
+		}
+
 		/// <summary>
 		/// compose two expressions with an and also operator.
 		/// </summary>

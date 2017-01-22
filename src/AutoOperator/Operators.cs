@@ -8,7 +8,7 @@ namespace AutoOperator
 	/// </summary>
 	public static class Operators
 	{
-		private static OperatorConfiguration conf;
+		private static OperatorConfiguration operatorConfiguration;
 
 		/// <summary>
 		/// Initializes the operator configuration.
@@ -16,8 +16,8 @@ namespace AutoOperator
 		/// <param name="config">The configuration.</param>
 		public static void Initialize(Action<OperatorConfiguration> config)
 		{
-			conf = new OperatorConfiguration();
-			config(conf);
+			operatorConfiguration = new OperatorConfiguration();
+			config(operatorConfiguration);
 		}
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace AutoOperator
 		/// <returns></returns>
 		public static bool Equals<T1, T2>(T1 a, T2 b)
 		{
-			var exp = conf.GetOperatorExpression<T1, T2>(Operator.Equals);
+			var exp = operatorConfiguration.GetOperatorExpression<T1, T2>(Operator.Equals);
 			return exp.Compile()(a, b);
 		}
 	}

@@ -5,12 +5,12 @@ using System.Linq.Expressions;
 namespace AutoOperator
 {
 	/// <summary>
-	/// Provides a starting point for poerator configuration.
+	///// Provides a starting point for operator configuration.
 	/// </summary>
 	public class OperatorConfiguration
 	{
 		private ConcurrentDictionary<Tuple<Type, Type, Operator>, Expression> dictionary = new ConcurrentDictionary<Tuple<Type, Type, Operator>, Expression>();
-		private EqualsOperatorExpressionBuilder eqbuilder = new EqualsOperatorExpressionBuilder();
+		private RelationalExpressionBuilder relationalOperatorExpressionBuilder = new RelationalExpressionBuilder();
 
 		/// <summary>
 		/// Configures the equality operator.
@@ -19,12 +19,12 @@ namespace AutoOperator
 		/// <typeparam name="T2">The type of the 2.</typeparam>
 		/// <param name="configure">The configure.</param>
 		/// <returns></returns>
-		public OperatorConfiguration ConfigureEquality<T1, T2>(Action<EqualsOperatorExpression<T1, T2>> configure)
+		public OperatorConfiguration Relation<T1, T2>(Action<RelationalOperaton<T1, T2>> configure)
 		{
-			var tmp = new EqualsOperatorExpression<T1, T2>(eqbuilder);
+			var tmp = new RelationalOperaton<T1, T2>();
 			configure(tmp);
 
-			eqbuilder.Add<T1, T2>((IOperatorExpression)tmp);
+			relationalOperatorExpressionBuilder.Add<T1, T2>((IOperatorExpression)tmp);
 
 			return this;
 		}
@@ -38,7 +38,7 @@ namespace AutoOperator
 		/// <returns></returns>
 		public Expression<Func<T1, T2, bool>> GetOperatorExpression<T1, T2>(Operator op)
 		{
-			return eqbuilder.GetExpression<T1, T2>();
+			return relationalOperatorExpressionBuilder.GetEqualityExpression<T1, T2>();
 		}
 
 		/// <summary>

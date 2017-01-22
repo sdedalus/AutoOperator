@@ -11,12 +11,12 @@ namespace AutoOperatorTests
 		{
 			Operators.Initialize(
 				conf => conf
-					.ConfigureEquality<Car, Boat>(
+					.Relation<Car, Boat>(
 						eq => eq
 							.Operation(c1 => c1.Color, c2 => c2.Color)
 							.Operation(c1 => c1.Price, c2 => c2.Price)
 							.Operation(c1 => c1.CarEngine, c2 => c2.BoatEngine))
-					.ConfigureEquality<CarEngine, BoatEngine>(
+					.Relation<CarEngine, BoatEngine>(
 						eq => eq
 							.Operation(e1 => e1.Hp, e2 => e2.Hp)
 						));
@@ -29,11 +29,12 @@ namespace AutoOperatorTests
 		{
 			Operators.Initialize(
 				conf => conf
-					.ConfigureEquality<Car, Boat>(
+					.Relation<Car, Boat>(
 						eq => eq
 							.Operation(c1 => c1.Color, c2 => c2.Color)
-							.Operation(c1 => c1.Price, c2 => c2.Price))
-					.ConfigureEquality<CarEngine, BoatEngine>(
+							.Operation(c1 => c1.Price, c2 => c2.Price)
+							.Operation(c1 => c1.CarEngine, c2 => c2.BoatEngine))
+					.Relation<CarEngine, BoatEngine>(
 						eq => eq
 							.Operation(e1 => e1.Hp, e2 => e2.Hp)
 						));

@@ -8,7 +8,7 @@ namespace AutoOperator
 	/// <typeparam name="T1">The type of the 1.</typeparam>
 	/// <typeparam name="T2">The type of the 2.</typeparam>
 	/// <seealso cref="AutoOperator.IOperatorExpression"/>
-	public interface IBooleanOperatorExpression<T1, T2> : IOperatorExpression
+	public interface IRelationalOperaton<T1, T2> : IOperatorExpression
 	{
 		/// <summary>
 		/// Operations the specified a.
@@ -18,12 +18,6 @@ namespace AutoOperator
 		/// <param name="a">a.</param>
 		/// <param name="b">The b.</param>
 		/// <returns></returns>
-		IBooleanOperatorExpression<T1, T2> Operation<TReturn1, TReturn2>(Expression<Func<T1, TReturn1>> a, Expression<Func<T2, TReturn2>> b);
-
-		/// <summary>
-		/// Builds this instance.
-		/// </summary>
-		/// <returns></returns>
-		Expression<Func<T1, T2, Boolean>> Build();
+		IRelationalOperaton<T1, T2> Operation<TReturn1, TReturn2>(Expression<Func<T1, TReturn1>> a, Expression<Func<T2, TReturn2>> b);
 	}
 }
