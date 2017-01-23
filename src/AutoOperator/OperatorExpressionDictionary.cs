@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace AutoOperator
 {
-	public class OperatorExpressionDictionary : IDictionary<Tuple<Type, Type>, IOperatorExpression>
+	public class OperatorExpressionDictionary : IDictionary<Tuple<Type, Type>, IExpresionList>
 	{
-		private ConcurrentDictionary<Tuple<Type, Type>, IOperatorExpression> innerDictionary;
+		private ConcurrentDictionary<Tuple<Type, Type>, IExpresionList> innerDictionary;
 
 		public OperatorExpressionDictionary()
 		{
-			innerDictionary = new ConcurrentDictionary<Tuple<Type, Type>, IOperatorExpression>();
+			innerDictionary = new ConcurrentDictionary<Tuple<Type, Type>, IExpresionList>();
 		}
 
-		public IOperatorExpression this[Tuple<Type, Type> key]
+		public IExpresionList this[Tuple<Type, Type> key]
 		{
 			get
 			{
@@ -36,19 +36,19 @@ namespace AutoOperator
 
 		public ICollection<Tuple<Type, Type>> Keys => innerDictionary.Keys;
 
-		public ICollection<IOperatorExpression> Values => innerDictionary.Values;
+		public ICollection<IExpresionList> Values => innerDictionary.Values;
 
-		public void Add(KeyValuePair<Tuple<Type, Type>, IOperatorExpression> item)
+		public void Add(KeyValuePair<Tuple<Type, Type>, IExpresionList> item)
 		{
 			innerDictionary.TryAdd(item.Key, item.Value);
 		}
 
-		public void Add<T1, T2>(IOperatorExpression value)
+		public void Add<T1, T2>(IExpresionList value)
 		{
 			innerDictionary.TryAdd(Tuple.Create(typeof(T1), typeof(T2)), value);
 		}
 
-		public void Add(Tuple<Type, Type> key, IOperatorExpression value)
+		public void Add(Tuple<Type, Type> key, IExpresionList value)
 		{
 			innerDictionary.TryAdd(key, value);
 		}
@@ -58,7 +58,7 @@ namespace AutoOperator
 			throw new NotImplementedException();
 		}
 
-		public bool Contains(KeyValuePair<Tuple<Type, Type>, IOperatorExpression> item)
+		public bool Contains(KeyValuePair<Tuple<Type, Type>, IExpresionList> item)
 		{
 			return innerDictionary.Contains(item);
 		}
@@ -68,42 +68,53 @@ namespace AutoOperator
 			return innerDictionary.ContainsKey(key);
 		}
 
-		public void CopyTo(KeyValuePair<Tuple<Type, Type>, IOperatorExpression>[] array, int arrayIndex)
+		public void CopyTo(KeyValuePair<Tuple<Type, Type>, IExpresionList>[] array, int arrayIndex)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IEnumerator<KeyValuePair<Tuple<Type, Type>, IOperatorExpression>> GetEnumerator()
+		public IEnumerator<KeyValuePair<Tuple<Type, Type>, IExpresionList>> GetEnumerator()
 		{
 			return innerDictionary.GetEnumerator();
 		}
 
-		public bool Remove(KeyValuePair<Tuple<Type, Type>, IOperatorExpression> item)
+		public bool Remove(KeyValuePair<Tuple<Type, Type>, IExpresionList> item)
 		{
-			IOperatorExpression ret;
+			IExpresionList ret;
 			return innerDictionary.TryRemove(item.Key, out ret);
 		}
 
 		public bool Remove(Tuple<Type, Type> key)
 		{
-			IOperatorExpression ret;
+			IExpresionList ret;
 			return innerDictionary.TryRemove(key, out ret);
 		}
 
 		public bool Remove<T1, T2>()
 		{
-			IOperatorExpression ret;
+			IExpresionList ret;
 			return innerDictionary.TryRemove(Tuple.Create(typeof(T1), typeof(T2)), out ret);
 		}
 
-		public bool TryGetValue(Tuple<Type, Type> key, out IOperatorExpression value)
+		public bool TryGetValue(Tuple<Type, Type> key, out IExpresionList value)
 		{
 			return innerDictionary.TryRemove(key, out value);
 		}
 
-		public bool TryGetValue<T1, T2>(out IOperatorExpression value)
+		public bool TryGetValue<T1, T2>(out IExpresionList<T1, T2> value)
 		{
-			return innerDictionary.TryGetValue(Tuple.Create(typeof(T1), typeof(T2)), out value);
+			IExpresionList outVaue;
+			var returnValue = innerDictionary.TryGetValue(Tuple.Create(typeof(T1), typeof(T2)), out outVaue);
+			if (returnValue)
+			{
+				value = (IExpresionList<T1, T2>)outVaue;
+			}
+			else
+			{
+				value = null;
+			}
+
+			return returnValue;
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()

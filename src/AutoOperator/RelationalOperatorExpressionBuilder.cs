@@ -20,31 +20,20 @@ namespace AutoOperator
 			inequalityConstructor = new InequalityConstructor(dictionary, equalityComposer);
 		}
 
-		public void Add<T1, T2>(IOperatorExpression value)
+		public void Add<T1, T2>(IExpresionList value)
 		{
 			dictionary.Add<T1, T2>(value);
 		}
 
 		public Expression<Func<T1, T2, bool>> GetEqualityExpression<T1, T2>()
 		{
-			IOperatorExpression config;
-			if (dictionary.TryGetValue(Tuple.Create(typeof(T1), typeof(T2)), out config))
+			IExpresionList<T1, T2> config;
+			if (dictionary.TryGetValue<T1, T2>(out config))
 			{
-				return equalityComposer.Build(((RelationalOperaton<T1, T2>)config).Parts, equalityConstructor);
+				return equalityComposer.Build(config, equalityConstructor);
 			}
 
 			return equalityConstructor.Build<T1, T2>();
 		}
-
-		//public Expression<Func<T1, T2, bool>> GetInequalityExpression<T1, T2>()
-		//{
-		//	IOperatorExpression config;
-		//	if (dictionary.TryGetValue(Tuple.Create(typeof(T1), typeof(T2)), out config))
-		//	{
-		//		return equalityComposer.Build(((RelationalOperaton<T1, T2>)config).Parts, inequalityConstructor);
-		//	}
-
-		//	return inequalityConstructor.Build<T1, T2>();
-		//}
 	}
 }

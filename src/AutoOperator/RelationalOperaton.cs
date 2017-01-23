@@ -15,11 +15,11 @@ namespace AutoOperator
 	{
 		private ExpresionList<T1, T2> parts = new ExpresionList<T1, T2>();
 
-		public IEnumerable<Func<IRelationalOperatorExpressionBuilder, Expression<Func<T1, T2, bool>>>> Parts
+		internal ExpresionList<T1, T2> Parts
 		{
 			get
 			{
-				return parts.Select(v => v);
+				return parts;
 			}
 		}
 

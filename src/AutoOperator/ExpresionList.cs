@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace AutoOperator
 {
-	public class ExpresionList<T1, T2> : List<Func<IRelationalOperatorExpressionBuilder, Expression<Func<T1, T2, bool>>>>, IExpresionList
+	public class ExpresionList<T1, T2> : List<Func<IRelationalOperatorExpressionBuilder, Expression<Func<T1, T2, bool>>>>, IExpresionList<T1, T2>
 	{
 		public ExpresionList() : base()
 		{
@@ -21,6 +21,10 @@ namespace AutoOperator
 	}
 
 	public interface IExpresionList
+	{
+	}
+
+	public interface IExpresionList<T1, T2> : IEnumerable<Func<IRelationalOperatorExpressionBuilder, Expression<Func<T1, T2, bool>>>>, IList<Func<IRelationalOperatorExpressionBuilder, Expression<Func<T1, T2, bool>>>>, IExpresionList
 	{
 	}
 }

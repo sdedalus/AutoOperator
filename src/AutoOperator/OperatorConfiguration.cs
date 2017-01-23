@@ -24,7 +24,7 @@ namespace AutoOperator
 			var tmp = new RelationalOperaton<T1, T2>();
 			configure(tmp);
 
-			relationalOperatorExpressionBuilder.Add<T1, T2>((IOperatorExpression)tmp);
+			relationalOperatorExpressionBuilder.Add<T1, T2>(tmp.Parts);
 
 			return this;
 		}
@@ -41,16 +41,16 @@ namespace AutoOperator
 			return relationalOperatorExpressionBuilder.GetEqualityExpression<T1, T2>();
 		}
 
-		/// <summary>
-		/// Gets the operator expression.
-		/// </summary>
-		/// <param name="a">a.</param>
-		/// <param name="b">The b.</param>
-		/// <param name="op">The op.</param>
-		/// <returns></returns>
-		public Expression GetOperatorExpression(Type a, Type b, Operator op)
-		{
-			return dictionary[Tuple.Create(a, b, op)];
-		}
+		/////// <summary>
+		/////// Gets the operator expression.
+		/////// </summary>
+		/////// <param name="a">a.</param>
+		/////// <param name="b">The b.</param>
+		/////// <param name="op">The op.</param>
+		/////// <returns></returns>
+		////public Expression GetOperatorExpression(Type a, Type b, Operator op)
+		////{
+		////	return dictionary[Tuple.Create(a, b, op)];
+		////}
 	}
 }

@@ -17,12 +17,10 @@ namespace AutoOperator
 
 		public Expression<Func<T1, T2, bool>> BuildExpression<T1, T2, TReturn1, TReturn2>(Expression<Func<T1, TReturn1>> a, Expression<Func<T2, TReturn2>> b)
 		{
-			IOperatorExpression config;
+			IExpresionList<TReturn1, TReturn2> config;
 			if (dictionary.TryGetValue<TReturn1, TReturn2>(out config))
 			{
-				var expCfg = (RelationalOperaton<TReturn1, TReturn2>)config;
-
-				var expr = equalityComposer.Build(expCfg.Parts, this);
+				var expr = equalityComposer.Build(config, this);
 				return a.NestExpression(b, expr);
 			}
 
@@ -53,12 +51,10 @@ namespace AutoOperator
 
 		public Expression<Func<T1, T2, bool>> BuildExpression<T1, T2, TReturn1, TReturn2>(Expression<Func<T1, TReturn1>> a, Expression<Func<T2, TReturn2>> b)
 		{
-			IOperatorExpression config;
+			IExpresionList<TReturn1, TReturn2> config;
 			if (dictionary.TryGetValue<TReturn1, TReturn2>(out config))
 			{
-				var expCfg = (RelationalOperaton<TReturn1, TReturn2>)config;
-
-				var expr = equalityComposer.Build(expCfg.Parts, this);
+				var expr = equalityComposer.Build(config, this);
 
 				return a.NestExpression(b, expr).Not();
 			}
