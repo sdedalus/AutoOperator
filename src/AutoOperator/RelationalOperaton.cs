@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace AutoOperator
@@ -14,12 +12,21 @@ namespace AutoOperator
 	public class RelationalOperaton<T1, T2> : IRelationalOperaton<T1, T2>
 	{
 		private ExpresionList<T1, T2> parts = new ExpresionList<T1, T2>();
+		private ExpresionList<T2, T1> partsReversed = new ExpresionList<T2, T1>();
 
 		internal ExpresionList<T1, T2> Parts
 		{
 			get
 			{
 				return parts;
+			}
+		}
+
+		internal ExpresionList<T2, T1> PartsReversed
+		{
+			get
+			{
+				return partsReversed;
 			}
 		}
 
@@ -33,8 +40,8 @@ namespace AutoOperator
 		/// <returns></returns>
 		public IRelationalOperaton<T1, T2> Operation<TReturn1, TReturn2>(Expression<Func<T1, TReturn1>> a, Expression<Func<T2, TReturn2>> b)
 		{
-			parts.Add((IRelationalOperatorExpressionBuilder builder) => builder.BuildExpression<T1, T2, TReturn1, TReturn2>(a, b));
-
+			parts.Add((IRelationalExpressionBuilder builder) => builder.BuildExpression<T1, T2, TReturn1, TReturn2>(a, b));
+			partsReversed.Add((IRelationalExpressionBuilder builder) => builder.BuildExpression<T2, T1, TReturn2, TReturn1>(b, a));
 			return this;
 		}
 	}

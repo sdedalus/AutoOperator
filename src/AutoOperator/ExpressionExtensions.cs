@@ -55,19 +55,24 @@ namespace AutoOperator
 		/// <typeparam name="TReturn2">The type of the return2.</typeparam>
 		/// <param name="a">a.</param>
 		/// <param name="b">The b.</param>
-		/// <param name="expr">The expr.</param>
+		/// <param name="expr">The expression.</param>
 		/// <returns></returns>
 		public static Expression<Func<T1, T2, bool>> NestExpression<T1, T2, TReturn1, TReturn2>(this Expression<Func<T1, TReturn1>> a, Expression<Func<T2, TReturn2>> b, Expression<Func<TReturn1, TReturn2, bool>> expr)
 		{
-			var left = ((System.Linq.Expressions.BinaryExpression)expr.Body).Left;
+			var body = ((System.Linq.Expressions.BinaryExpression)expr.Body);
+			var left = body.Left;
 			var leftInnerProp = GetOuterProperty(left);
 			var leftFull = Expression.PropertyOrField(a.Body, leftInnerProp.Name);
 
-			var right = ((System.Linq.Expressions.BinaryExpression)expr.Body).Right;
+			var right = body.Right;
 			var rightInnerProp = GetOuterProperty(right);
 			var rightFull = Expression.PropertyOrField(b.Body, rightInnerProp.Name);
+
 			IEnumerable<ParameterExpression> expParams = a.Parameters.Concat(b.Parameters);
-			return Expression.Lambda<Func<T1, T2, bool>>(Expression.Equal(leftFull, rightFull), expParams);
+			var conversion = body.Conversion;
+			var newBody = body.Update(leftFull, conversion, rightFull);
+
+			return Expression.Lambda<Func<T1, T2, bool>>(newBody, expParams);
 		}
 
 		/// <summary>
@@ -116,6 +121,19 @@ namespace AutoOperator
 		}
 
 		/// <summary>
+		/// Ors the else.
+		/// </summary>
+		/// <typeparam name="T1">The type of the 1.</typeparam>
+		/// <typeparam name="T2">The type of the 2.</typeparam>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
+		/// <returns></returns>
+		public static Expression<Func<T1, T2, bool>> OrElse<T1, T2>(this Expression<Func<T1, T2, bool>> first, Expression<Func<T1, T2, bool>> second)
+		{
+			return first.ComposeAndMerge(second, Expression.OrElse);
+		}
+
+		/// <summary>
 		/// Compose two expressions together with equals.
 		/// </summary>
 		/// <typeparam name="T1">The type of the 1.</typeparam>
@@ -128,6 +146,11 @@ namespace AutoOperator
 		public static Expression<Func<T1, T2, bool>> Eq<T1, T2, TReturn1, TReturn2>(this Expression<Func<T1, TReturn1>> first, Expression<Func<T2, TReturn2>> second)
 		{
 			return first.ComposeAndConcatenate(second, Expression.Equal);
+		}
+
+		public static Expression<Func<T1, T2, bool>> NotEq<T1, T2, TReturn1, TReturn2>(this Expression<Func<T1, TReturn1>> first, Expression<Func<T2, TReturn2>> second)
+		{
+			return first.ComposeAndConcatenate(second, Expression.NotEqual);
 		}
 
 		/// <summary>

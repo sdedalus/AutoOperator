@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AutoOperator
 {
@@ -55,7 +53,7 @@ namespace AutoOperator
 
 		public void Clear()
 		{
-			throw new NotImplementedException();
+			innerDictionary.Clear();
 		}
 
 		public bool Contains(KeyValuePair<Tuple<Type, Type>, IExpresionList> item)

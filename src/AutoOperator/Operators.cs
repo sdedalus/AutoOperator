@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq.Expressions;
 
 namespace AutoOperator
 {
@@ -9,6 +8,7 @@ namespace AutoOperator
 	public static class Operators
 	{
 		private static OperatorConfiguration operatorConfiguration;
+		private static RelationalExpressionBuilder relationalExpressionBuilder = new RelationalExpressionBuilder();
 
 		/// <summary>
 		/// Initializes the operator configuration.
@@ -16,7 +16,7 @@ namespace AutoOperator
 		/// <param name="config">The configuration.</param>
 		public static void Initialize(Action<OperatorConfiguration> config)
 		{
-			operatorConfiguration = new OperatorConfiguration();
+			operatorConfiguration = new OperatorConfiguration(relationalExpressionBuilder);
 			config(operatorConfiguration);
 		}
 
@@ -31,7 +31,13 @@ namespace AutoOperator
 		/// <returns></returns>
 		public static bool Equals<T1, T2>(T1 a, T2 b)
 		{
-			var exp = operatorConfiguration.GetOperatorExpression<T1, T2>(Operator.Equals);
+			var exp = relationalExpressionBuilder.GetEqualityExpression<T1, T2>();
+			return exp.Compile()(a, b);
+		}
+
+		public static bool NotEquals<T1, T2>(T1 a, T2 b)
+		{
+			var exp = relationalExpressionBuilder.GetInequalityExpression<T1, T2>();
 			return exp.Compile()(a, b);
 		}
 	}

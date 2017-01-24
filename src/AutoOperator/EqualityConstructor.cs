@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Linq.Expressions;
 
 namespace AutoOperator
 {
-	public class EqualityConstructor : IRelationalOperatorExpressionBuilder
+	public class EqualityConstructor : IRelationalExpressionBuilder
 	{
 		private OperatorExpressionDictionary dictionary;
 		private EqualityComposer equalityComposer;
@@ -38,15 +37,15 @@ namespace AutoOperator
 		}
 	}
 
-	public class InequalityConstructor : IRelationalOperatorExpressionBuilder
+	public class InequalityConstructor : IRelationalExpressionBuilder
 	{
 		private OperatorExpressionDictionary dictionary;
-		private EqualityComposer equalityComposer;
+		private InequalityComposer inequalityComposer;
 
-		public InequalityConstructor(OperatorExpressionDictionary dictionary, EqualityComposer equalityComposer)
+		public InequalityConstructor(OperatorExpressionDictionary dictionary, InequalityComposer inequalityComposer)
 		{
 			this.dictionary = dictionary;
-			this.equalityComposer = equalityComposer;
+			this.inequalityComposer = inequalityComposer;
 		}
 
 		public Expression<Func<T1, T2, bool>> BuildExpression<T1, T2, TReturn1, TReturn2>(Expression<Func<T1, TReturn1>> a, Expression<Func<T2, TReturn2>> b)
@@ -54,22 +53,22 @@ namespace AutoOperator
 			IExpresionList<TReturn1, TReturn2> config;
 			if (dictionary.TryGetValue<TReturn1, TReturn2>(out config))
 			{
-				var expr = equalityComposer.Build(config, this);
+				var expr = inequalityComposer.Build(config, this);
 
-				return a.NestExpression(b, expr).Not();
+				return a.NestExpression(b, expr);
 			}
 
-			return (this.Build<T1, T2, TReturn1, TReturn2>(a, b)).Not();
+			return (this.Build<T1, T2, TReturn1, TReturn2>(a, b));
 		}
 
-		private Expression<Func<T1, T2, bool>> Build<T1, T2>()
+		public Expression<Func<T1, T2, bool>> Build<T1, T2>()
 		{
-			return (T1 a, T2 b) => a.Equals(b);
+			return (T1 a, T2 b) => !a.Equals(b);
 		}
 
 		private Expression<Func<T1, T2, bool>> Build<T1, T2, TReturn1, TReturn2>(Expression<Func<T1, TReturn1>> a, Expression<Func<T2, TReturn2>> b)
 		{
-			return a.Eq(b);
+			return a.NotEq(b);
 		}
 	}
 }

@@ -43,14 +43,13 @@
     <Compile Include="EqualityComposer.cs" />
     <Compile Include="EqualityConstructor.cs" />
     <Compile Include="ExpresionList.cs" />
-    <Compile Include="IRelationalOperatorExpressionBuilder.cs" />
+    <Compile Include="IRelationalExpressionBuilder.cs" />
     <Compile Include="OperatorExpressionDictionary.cs" />
     <Compile Include="RelationalOperaton.cs" />
     <Compile Include="RelationalOperatorExpressionBuilder.cs" />
     <Compile Include="IRelationalOperaton.cs" />
     <Compile Include="IOperatorExpression.cs" />
     <Compile Include="ExpressionExtensions.cs" />
-    <Compile Include="Operator.cs" />
     <Compile Include="OperatorConfiguration.cs" />
     <Compile Include="Operators.cs" />
     <Compile Include="ParameterRebinder.cs" />

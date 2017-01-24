@@ -7,7 +7,7 @@ namespace AutoOperatorTests
 	public class AutoOperatorConfigurationShould
 	{
 		[TestMethod]
-		public void TestMethod1()
+		public void ReturnFalseForEqualityWhenTypesDoNotMatch()
 		{
 			Operators.Initialize(
 				conf => conf
@@ -22,10 +22,30 @@ namespace AutoOperatorTests
 						));
 
 			Assert.IsFalse(Operators.Equals(new Car() { Color = "", Price = 10, CarEngine = new CarEngine() { Hp = 300 } }, new Boat() { Color = "", Price = 10, BoatEngine = new BoatEngine() { Hp = 200 } }));
+			Assert.IsFalse(Operators.Equals(new Boat() { Color = "", Price = 10, BoatEngine = new BoatEngine() { Hp = 200 } }, new Car() { Color = "", Price = 10, CarEngine = new CarEngine() { Hp = 300 } }));
 		}
 
 		[TestMethod]
-		public void TestMethod2()
+		public void ReturnTrueForInequalityWhenTypesDoNotMatch()
+		{
+			Operators.Initialize(
+				conf => conf
+					.Relation<Car, Boat>(
+						eq => eq
+							.Operation(c1 => c1.Color, c2 => c2.Color)
+							.Operation(c1 => c1.Price, c2 => c2.Price)
+							.Operation(c1 => c1.CarEngine, c2 => c2.BoatEngine))
+					.Relation<CarEngine, BoatEngine>(
+						eq => eq
+							.Operation(e1 => e1.Hp, e2 => e2.Hp)
+						));
+
+			Assert.IsTrue(Operators.NotEquals(new Car() { Color = "", Price = 10, CarEngine = new CarEngine() { Hp = 300 } }, new Boat() { Color = "", Price = 10, BoatEngine = new BoatEngine() { Hp = 200 } }));
+			Assert.IsTrue(Operators.NotEquals(new Boat() { Color = "", Price = 10, BoatEngine = new BoatEngine() { Hp = 200 } }, new Car() { Color = "", Price = 10, CarEngine = new CarEngine() { Hp = 300 } }));
+		}
+
+		[TestMethod]
+		public void ReturnTrueForEqualityWhenTypesDoMatch()
 		{
 			Operators.Initialize(
 				conf => conf
@@ -40,6 +60,26 @@ namespace AutoOperatorTests
 						));
 
 			Assert.IsTrue(Operators.Equals(new Car() { Color = "", Price = 10, CarEngine = new CarEngine() { Hp = 200 } }, new Boat() { Color = "", Price = 10, BoatEngine = new BoatEngine() { Hp = 200 } }));
+			Assert.IsTrue(Operators.Equals(new Boat() { Color = "", Price = 10, BoatEngine = new BoatEngine() { Hp = 200 } }, new Car() { Color = "", Price = 10, CarEngine = new CarEngine() { Hp = 200 } }));
+		}
+
+		[TestMethod]
+		public void ReturnFalseForInequalityWhenTypesDoMatch()
+		{
+			Operators.Initialize(
+				conf => conf
+					.Relation<Car, Boat>(
+						eq => eq
+							.Operation(c1 => c1.Color, c2 => c2.Color)
+							.Operation(c1 => c1.Price, c2 => c2.Price)
+							.Operation(c1 => c1.CarEngine, c2 => c2.BoatEngine))
+					.Relation<CarEngine, BoatEngine>(
+						eq => eq
+							.Operation(e1 => e1.Hp, e2 => e2.Hp)
+						));
+
+			Assert.IsFalse(Operators.NotEquals(new Car() { Color = "", Price = 10, CarEngine = new CarEngine() { Hp = 200 } }, new Boat() { Color = "", Price = 10, BoatEngine = new BoatEngine() { Hp = 200 } }));
+			Assert.IsFalse(Operators.NotEquals(new Boat() { Color = "", Price = 10, BoatEngine = new BoatEngine() { Hp = 200 } }, new Car() { Color = "", Price = 10, CarEngine = new CarEngine() { Hp = 200 } }));
 		}
 	}
 
