@@ -50,7 +50,7 @@ initial work is focused around equality.
 
 The MIT License
 
-Copyright (c) 2010-2017 Google, Inc. http://angularjs.org
+Copyright (c) 2010-2017 David Lewis.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
